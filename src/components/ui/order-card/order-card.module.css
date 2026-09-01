@@ -44,6 +44,7 @@
   list-style: none;
   margin: 0;
   padding: 0;
+  overflow: hidden;
 }
 
 .img_wrap:nth-child(n + 2) {
@@ -52,10 +53,13 @@
 }
 
 .img {
-  position: relative;
-  right: 25px;
+  position: absolute;
+  top: 2px;
+  right: -18px;
   width: 112px;
   height: 56px;
+  object-fit: cover;
+  object-position: center top;
 }
 
 .remains {

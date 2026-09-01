@@ -29,6 +29,7 @@ const constructorSlice = createSlice({
       prepare: (item: TIngredient) => ({
         payload: {
           ...item,
+          _id: item._id,
           id: nanoid()
         }
       })
