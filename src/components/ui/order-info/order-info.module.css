@@ -20,6 +20,7 @@
   border-radius: 50%;
   background: linear-gradient(63.18deg, #801ab3 0%, #4c4cff 100%);
   position: relative;
+  overflow: hidden;
 }
 
 .border {
@@ -31,13 +32,17 @@
   left: 2px;
   top: 2px;
   text-align: center;
+  overflow: hidden;
 }
 
 .img {
-  position: relative;
-  right: 25px;
+  position: absolute;
+  top: 2px;
+  right: -18px;
   width: 112px;
   height: 56px;
+  object-fit: cover;
+  object-position: center top;
 }
 
 .item {
