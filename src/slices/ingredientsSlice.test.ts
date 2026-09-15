@@ -3,11 +3,15 @@ import ingredientsSlice from './ingredientsSlice';
 
 describe('ingredientsSlice reducer', () => {
   // 1. проверка на неизвестный экшен (initial state undefined)
+  const defaultInitialState = {
+    items: [],
+    isLoading: true,
+    error: null
+  };
   it('должен вернуть состояние по умолчанию при неизвестном экшене', () => {
-    const initialState = undefined;
     const action = { type: 'UNKNOWN_ACTION_TYPE' };
-    const result = ingredientsSlice(initialState, action);
-    expect(result).toBeDefined();
+    const result = ingredientsSlice(undefined, action);
+    expect(result).toEqual(defaultInitialState);
   });
   // 2. проверка pending (загрузка началась)
   it('должен корректно обрабатывать pending состояние', () => {

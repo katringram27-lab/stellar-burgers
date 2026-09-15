@@ -3,7 +3,7 @@ import path from 'path';
 
 test('интеграционный тест: модальные окна ингредиентов', async ({ page }) => {
   // 1. путь к HAR-файлу
-  const harPath = path.join(__dirname, 'ingredients.har');
+  const harPath = path.join(__dirname, 'hars', 'ingredients.har');
 
   // 2. настраиваем перехват запроса
   await page.routeFromHAR(harPath, { url: '**/api/ingredients',
@@ -20,12 +20,23 @@ test('интеграционный тест: модальные окна инг�
 
   // 6. открытие модального окна ингредиента
   const bunCard = ingredientCards.filter({ hasText: /булка/i }).first();
+  const expectedBunName = (await bunCard.locator('p').last().textContent())?.trim();
+  const expectedNutrition = {
+    calories: '420',
+    proteins: '80',
+    fat: '24',
+    carbohydrates: '53'
+  };
   await bunCard.click();
 
   const modalWindow = page.getByTestId('modal-window');
   await expect(modalWindow).toBeVisible({ timeout: 10000 });
 
-  await expect(modalWindow).toHaveText(/булка/i);
+  await expect(modalWindow).toContainText(expectedBunName ?? '');
+  await expect(modalWindow).toContainText(expectedNutrition.calories);
+  await expect(modalWindow).toContainText(expectedNutrition.proteins);
+  await expect(modalWindow).toContainText(expectedNutrition.fat);
+  await expect(modalWindow).toContainText(expectedNutrition.carbohydrates);
 
   // 7. закрытие по клику на крестик
   const closeButton = page.getByRole('button', { name: 'Закрыть модальное окно' });

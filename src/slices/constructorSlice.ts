@@ -7,7 +7,7 @@ export interface IConstructorState {
   maxId: number;
 }
 
-const initialState: IConstructorState = {
+export const initialState: IConstructorState = {
   bun: null,
   constructorItems: [],
   maxId: 0

@@ -5,16 +5,12 @@ import constructorReducer, {
   removeConstructorItemsAll,
   moveUpConstructorItems,
   moveDownConstructorItems,
+  initialState,
   IConstructorState
 } from './constructorSlice';
 
 describe('constructorSlice reducer', () => {
-  // 1. проверка на неизвестный экшен (initial state undefined)
-  const defaultInitialState: IConstructorState = {
-    bun: null,
-    constructorItems: [],
-    maxId: 0
-  };
+  const defaultInitialState: IConstructorState = initialState;
 
   it('должен вернуть состояние по умолчанию при неизвестном экшене', () => {
     const action = { type: 'UNKNOWN_ACTION_TYPE' };

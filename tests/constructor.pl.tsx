@@ -5,7 +5,7 @@ test('интеграционный тест: kонструктор бургер�
   page
 }) => {
   // 1. путь к HAR-файлу
-  const harPath = path.join(__dirname, 'ingredients.har');
+  const harPath = path.join(__dirname, 'hars', 'ingredients.har');
 
   // 2. настраиваем перехват запроса
   await page.routeFromHAR(harPath, {
@@ -25,16 +25,27 @@ test('интеграционный тест: kонструктор бургер�
   const bunCard = ingredientCards.filter({ hasText: /булка/i }).first();
   await bunCard.getByRole('button', { name: 'Добавить' }).click();
 
+  const constructorBunTop = page.getByTestId('constructor-bun-top');
+  const constructorBunBottom = page.getByTestId('constructor-bun-bottom');
   const constructorItems = page.getByTestId('constructor-item');
+
+  await expect(constructorBunTop).toContainText(/булка/i);
+  await expect(constructorBunBottom).toContainText(/булка/i);
   await expect(constructorItems).toHaveCount(0);
 
   // 6. ТЕСТ 2: ДОБАВЛЕНИЕ КОТЛЕТЫ (идеал: разные типы)
   const pattyCard = ingredientCards.filter({ hasText: /котлета/i }).first();
+  const pattyName = /котлета/i;
   await pattyCard.getByRole('button', { name: 'Добавить' }).click();
 
   await expect(constructorItems).toHaveCount(1);
+  await expect(constructorItems.filter({ hasText: pattyName })).toHaveCount(1);
 
   // 7. (опционально) проверка цены
-  const totalPrice = page.getByTestId('total-price');
-  await expect(totalPrice).toHaveText(/\d+/);
+  const bunPrice = 1255;
+  const pattyPrice = 424;
+  const expectedTotalPrice = bunPrice * 2 + pattyPrice;
+
+  const totalPrice = page.getByTestId('total-price').locator('p');
+  await expect(totalPrice).toHaveText(String(expectedTotalPrice));
 });
