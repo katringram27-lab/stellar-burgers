@@ -7,7 +7,7 @@ test('интеграционный тест: создание заказа', asy
   const orderHarPath = path.join(__dirname, 'hars', 'order.har');
   const userHarPath = path.join(__dirname, 'hars', 'user.har');
 
-  // 2. настраиваем моки через HAR
+  // 2. перехватываем запросы к API
   await page.routeFromHAR(ingredientsHarPath, {
     url: '**/api/ingredients',
     notFound: 'abort'
@@ -23,6 +23,7 @@ test('интеграционный тест: создание заказа', asy
     notFound: 'abort'
   });
 
+  // Подставляем тестовый токен авторизации
   await page.context().addCookies([
     {
       name: 'accessToken',
@@ -30,10 +31,6 @@ test('интеграционный тест: создание заказа', asy
       url: 'http://localhost:4000'
     }
   ]);
-
-  await page.addInitScript(() => {
-    localStorage.setItem('refreshToken', 'test-refresh-token');
-  });
 
   // 3. открываем страницу
   await page.goto('/');
@@ -51,6 +48,7 @@ test('интеграционный тест: создание заказа', asy
   const pattyCard = ingredientCards.filter({ hasText: pattyName }).first();
   await pattyCard.getByRole('button', { name: 'Добавить' }).click();
 
+  // проверяем состав конструктора
   const constructorBunTop = page.getByTestId('constructor-bun-top');
   const constructorBunBottom = page.getByTestId('constructor-bun-bottom');
   const constructorItems = page.getByTestId('constructor-item');
@@ -61,9 +59,9 @@ test('интеграционный тест: создание заказа', asy
   await expect(constructorItems.filter({ hasText: pattyName })).toHaveCount(1);
 
   // 5. клик по кнопке оформить заказ
-  //await page.waitForResponse(res => res.url().includes('/api/auth/user'), { timeout" 15000 });
   const orderButton = page.getByRole('button', { name: 'Оформить заказ' });
-  //console.log('ORDER BUTTON ENABLED:', await orderButton.isEnabled());
+
+  await expect(orderButton).toBeEnabled();
   await orderButton.click();
 
   // 6. проверка: модальное окно открылось и в нем верный номер
